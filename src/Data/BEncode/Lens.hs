@@ -20,11 +20,9 @@
 -- 'BDictMap'@, and @'TraversbaleWithIndex' 'BDictMap'@.
 module Data.BEncode.Lens
   ( -- * Prisms
-    _BInteger,
-    _BString,
-    _BList,
-    _BDict,
-   -- * BDicts and BLists
+    AsBValue (..),
+
+    -- * BDicts and BLists
     members,
     key,
     nth,
@@ -36,30 +34,51 @@ import Control.Lens
 import Data.BEncode
 import Data.BEncode.BDict as BE
 import Data.BEncode.Types
+import qualified Data.ByteString as Strict
+import qualified Data.ByteString.Lazy as Lazy
 
-_BInteger :: Prism' BValue BInteger
-_BInteger = prism' BInteger (\case BInteger x -> Just x; _ -> Nothing)
+class AsBValue t where
+  _BValue :: Prism' t BValue
+  _BInteger :: Prism' t BInteger
+  _BInteger = _BValue . prism' BInteger (\case BInteger x -> Just x; _ -> Nothing)
+  {-# INLINE _BInteger #-}
+  _BString :: Prism' t BString
+  _BString = _BValue . prism' BString (\case BString x -> Just x; _ -> Nothing)
+  {-# INLINE _BString #-}
+  _BList :: Prism' t BList
+  _BList = _BValue . prism' BList (\case BList x -> Just x; _ -> Nothing)
+  {-# INLINE _BList #-}
+  _BDict :: Prism' t BDict
+  _BDict = _BValue . prism' BDict (\case BDict x -> Just x; _ -> Nothing)
+  {-# INLINE _BDict #-}
 
-_BString :: Prism' BValue BString
-_BString = prism' BString (\case BString x -> Just x; _ -> Nothing)
+instance AsBValue BValue where
+  _BValue = id
+  {-# INLINE _BValue #-}
 
-_BList :: Prism' BValue BList
-_BList = prism' BList (\case BList x -> Just x; _ -> Nothing)
+instance AsBValue Strict.ByteString where
+  _BValue = prism' (view strict . encode) $ either (const Nothing) Just . decode
+  {-# INLINE _BValue #-}
 
-_BDict :: Prism' BValue BDict
-_BDict = prism' BDict (\case BDict x -> Just x; _ -> Nothing)
+instance AsBValue Lazy.ByteString where
+  _BValue = prism' encode $ either (const Nothing) Just . decode . view strict
+  {-# INLINE _BValue #-}
 
-members :: IndexedTraversal' BKey BValue BValue
+members :: AsBValue t => IndexedTraversal' BKey t BValue
 members = _BDict . itraversed
+{-# INLINE members #-}
 
-key :: BKey -> Traversal' BValue BValue
+key :: AsBValue t => BKey -> Traversal' t BValue
 key k = _BDict . ix k
+{-# INLINE key #-}
 
-nth :: Int -> Traversal' BValue BValue
+nth :: AsBValue t => Int -> Traversal' t BValue
 nth i = _BList . ix i
+{-# INLINE nth #-}
 
-values :: IndexedTraversal' Int BValue BValue
+values :: AsBValue t => IndexedTraversal' Int t BValue
 values = _BList . traversed
+{-# INLINE values #-}
 
 ------------------------------------------------------------------------------
 -- Orphan instances for lens library interop

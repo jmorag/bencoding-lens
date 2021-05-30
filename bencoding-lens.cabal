@@ -19,5 +19,6 @@ library
   ghc-options:      -Wall -Wincomplete-uni-patterns
   build-depends:
     , base       <5
-    , bencoding
-    , lens
+    , bencoding  <0.5
+    , bytestring
+    , lens       <6
