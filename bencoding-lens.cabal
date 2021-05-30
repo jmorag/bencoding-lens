@@ -5,7 +5,8 @@ synopsis:           Lenses for bencoded data.
 description:        A port of lens-aeson for bencoding.
 homepage:           https://github.com/jmorag/bencoding-lens
 bug-reports:        https://github.com/jmorag/bencoding-lens/issues
-license:            BSD-3
+license:            BSD3
+license-file:       LICENSE
 author:             Joseph Morag
 maintainer:         Joseph Morag <jm@josephmorag.com>
 copyright:          (c) 2021, Joseph Morag
@@ -29,11 +30,15 @@ tested-with:
    || ==8.10.4
    || ==9.0.1
 
+source-repository head
+  type: git
+  location: https://github.com/jmorag/bencoding-lens
+
 library
   default-language: Haskell2010
   hs-source-dirs:   src
   exposed-modules:  Data.BEncode.Lens
-  ghc-options:      -Wall -Wincomplete-uni-patterns
+  ghc-options:      -Wall -Wincomplete-uni-patterns -O2
   build-depends:
       base        >=4.4  && <5
     , bencoding   >=0.4  && <0.5
