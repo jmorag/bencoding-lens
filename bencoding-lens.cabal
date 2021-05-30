@@ -1,16 +1,33 @@
-cabal-version:      3.0
+cabal-version:      >=1.10
 name:               bencoding-lens
 version:            0.1.0.0
 synopsis:           Lenses for bencoded data.
 description:        A port of lens-aeson for bencoding.
 homepage:           https://github.com/jmorag/bencoding-lens
 bug-reports:        https://github.com/jmorag/bencoding-lens/issues
-license:            BSD-3-Clause
+license:            BSD-3
 author:             Joseph Morag
 maintainer:         Joseph Morag <jm@josephmorag.com>
 copyright:          (c) 2021, Joseph Morag
 category:           Data
-extra-source-files: README.md
+extra-source-files:
+  .gitignore
+  CHANGELOG.md
+  README.md
+
+build-type:         Simple
+tested-with:
+  GHC ==7.4.2
+   || ==7.6.3
+   || ==7.8.4
+   || ==7.10.3
+   || ==8.0.2
+   || ==8.2.2
+   || ==8.4.4
+   || ==8.6.5
+   || ==8.8.4
+   || ==8.10.4
+   || ==9.0.1
 
 library
   default-language: Haskell2010
@@ -18,7 +35,7 @@ library
   exposed-modules:  Data.BEncode.Lens
   ghc-options:      -Wall -Wincomplete-uni-patterns
   build-depends:
-    , base       <5
-    , bencoding  <0.5
+      base        <5
+    , bencoding   <0.5
     , bytestring
-    , lens       <6
+    , lens        <6
