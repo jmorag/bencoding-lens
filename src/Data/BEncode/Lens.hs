@@ -37,8 +37,15 @@ import Data.BEncode.Types
 import qualified Data.ByteString as Strict
 import qualified Data.ByteString.Lazy as Lazy
 
+-- $setup
+-- >>> import Control.Lens
+-- >>> :set -XOverloadedStrings
+
 class AsBValue t where
   _BValue :: Prism' t BValue
+  -- |
+  -- >>> "i3e" ^? _BInteger
+  -- Just 3
   _BInteger :: Prism' t BInteger
   _BInteger = _BValue . prism' BInteger (\case BInteger x -> Just x; _ -> Nothing)
   {-# INLINE _BInteger #-}
