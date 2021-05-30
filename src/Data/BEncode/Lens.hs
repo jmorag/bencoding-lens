@@ -1,10 +1,10 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeSynonymInstances #-}
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 -- |
@@ -39,22 +39,47 @@ import qualified Data.ByteString.Lazy as Lazy
 
 -- $setup
 -- >>> import Control.Lens
+-- >>> import Data.ByteString
+-- >>> import Data.BEncode.BDict
+-- >>> import Data.BEncode.Types
 -- >>> :set -XOverloadedStrings
 
 class AsBValue t where
   _BValue :: Prism' t BValue
+
   -- |
-  -- >>> "i3e" ^? _BInteger
+  -- >>> ("i3e" :: ByteString) ^? _BInteger
   -- Just 3
   _BInteger :: Prism' t BInteger
   _BInteger = _BValue . prism' BInteger (\case BInteger x -> Just x; _ -> Nothing)
   {-# INLINE _BInteger #-}
+
+  -- |
+  -- >>> ("0:" :: ByteString) ^? _BString
+  -- Just ""
+  --
+  -- >>> ("4:spam" :: ByteString) ^? _BString
+  -- Just "spam"
   _BString :: Prism' t BString
   _BString = _BValue . prism' BString (\case BString x -> Just x; _ -> Nothing)
   {-# INLINE _BString #-}
+
+  -- |
+  -- >>> ("le" :: ByteString) ^? _BList
+  -- Just []
+  --
+  -- >>> ("l4:spam4:eggse" :: ByteString) ^? _BList == Just [BString "spam", BString "eggs"]
+  -- True
   _BList :: Prism' t BList
   _BList = _BValue . prism' BList (\case BList x -> Just x; _ -> Nothing)
   {-# INLINE _BList #-}
+
+  -- |
+  -- >>> ("de" :: ByteString) ^? _BDict
+  -- Just Nil
+  --
+  -- >>> ("d3:cow3:moo4:spam4:eggse" :: ByteString) ^? _BDict == Just (Cons "cow" (BString "moo") (Cons "spam" (BString "eggs") Nil))
+  -- True
   _BDict :: Prism' t BDict
   _BDict = _BValue . prism' BDict (\case BDict x -> Just x; _ -> Nothing)
   {-# INLINE _BDict #-}
