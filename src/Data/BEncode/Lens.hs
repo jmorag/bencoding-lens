@@ -30,7 +30,6 @@ module Data.BEncode.Lens
   )
 where
 
-import Control.Applicative
 import Control.Lens
 import Data.BEncode
 import Data.BEncode.BDict as BE
