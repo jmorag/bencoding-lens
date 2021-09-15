@@ -28,7 +28,7 @@ tested-with:
    || ==9.0.1
 
 source-repository head
-  type: git
+  type:     git
   location: https://github.com/jmorag/bencoding-lens
 
 library
@@ -37,7 +37,7 @@ library
   exposed-modules:  Data.BEncode.Lens
   ghc-options:      -Wall -O2
   build-depends:
-      base        >=4.4  && <5
-    , bencoding   >=0.4  && <0.5
+      base        >=4.4     && <5
+    , bencoding   >=0.4.5.4 && <0.5
     , bytestring  >=0.10
     , lens        <6
