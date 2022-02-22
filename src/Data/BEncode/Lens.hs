@@ -8,7 +8,7 @@
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
 -- |
--- Copyright :  (c) Joseph Morag 2021
+-- Copyright :  (c) Joseph Morag 2021-2022
 -- License   :  BSD3
 -- Maintainer:  Joseph Morag <jm@josephmorag.com>
 -- Stability :  experimental
