@@ -96,18 +96,30 @@ instance AsBValue Lazy.ByteString where
   _BValue = prism' encode $ either (const Nothing) Just . decode . view strict
   {-# INLINE _BValue #-}
 
+-- |
+-- >>> ("d3:cow3:moo4:spam4:eggse" :: ByteString) ^@.. members
+-- [("cow",BString "moo"),("spam",BString "eggs")]
 members :: AsBValue t => IndexedTraversal' BKey t BValue
 members = _BDict . itraversed
 {-# INLINE members #-}
 
+-- |
+-- >>> ("d3:cow3:moo4:spam4:eggse" :: ByteString) ^? key "cow"
+-- Just (BString "moo")
 key :: AsBValue t => BKey -> Traversal' t BValue
 key k = _BDict . ix k
 {-# INLINE key #-}
 
+-- |
+-- >>> ("li0ei1ee" :: ByteString) ^? nth 0
+-- Just (BInteger 0)
 nth :: AsBValue t => Int -> Traversal' t BValue
 nth i = _BList . ix i
 {-# INLINE nth #-}
 
+-- |
+-- >>> ("ll1:ae3:cow3:moo4:spam4:eggse" :: ByteString) ^.. values
+-- [BList [BString "a"],BString "cow",BString "moo",BString "spam",BString "eggs"]
 values :: AsBValue t => IndexedTraversal' Int t BValue
 values = _BList . traversed
 {-# INLINE values #-}
