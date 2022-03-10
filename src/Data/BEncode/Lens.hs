@@ -44,6 +44,8 @@ import qualified Data.ByteString.Lazy as Lazy
 -- >>> import Data.BEncode.Types
 -- >>> :set -XOverloadedStrings
 
+-- | Things that can be treated as a 'BValue'. Instances are provided for strict
+-- and lazy 'ByteString' as well as 'BValue's themselves.
 class AsBValue t where
   _BValue :: Prism' t BValue
 
